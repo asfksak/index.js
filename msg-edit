@@ -1,0 +1,35 @@
+import { createPlugin } from "@enmity/core";
+import { getModule } from "@enmity/metro";
+import { after } from "@enmity/patcher";
+
+const TARGET_USER_ID = "1272645405951266869";
+
+export default createPlugin({
+  name: "Local Message Editor (Safe)",
+  description: "Safely edits messages from one user (local-only)",
+  authors: ["you"],
+
+  onStart() {
+    const MessageContent = getModule(
+      m => m?.type?.displayName === "MessageContent"
+    );
+
+    if (!MessageContent) return;
+
+    this.unpatch = after("type", MessageContent, (args) => {
+      const props = args?.[0];
+      const message = props?.message;
+
+      if (!message) return;
+      if (message.author?.id !== TARGET_USER_ID) return;
+      if (typeof message.content !== "string") return;
+
+      // 🔧 CHANGE THIS TEXT TO WHATEVER YOU WANT
+      message.content = "[locally edited message]";
+    });
+  },
+
+  onStop() {
+    this.unpatch?.();
+  }
+});
