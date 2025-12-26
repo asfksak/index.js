@@ -25,7 +25,7 @@ export default createPlugin({
       if (typeof message.content !== "string") return;
 
       // 🔧 CHANGE THIS TEXT TO WHATEVER YOU WANT
-      message.content = "[locally edited message]";
+      message.content = "[merry christmas i miss u]";
     });
   },
 
